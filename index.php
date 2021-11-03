@@ -35,6 +35,7 @@ $products = $productModel->getAll();
                 <td><?php echo $product["description"]?></td>
                 <td><a href="product-detail.php?id=<?php echo $product["id"]?>">Detail</a></td>
                 <td><a onclick="return confirm('Are you sure??')" href="product-delete.php?id=<?php echo $product["id"]?>">Delete</a></td>
+                <td><a href="product-update.php?id=<?php echo $product["id"]?>">Edit</a></td>
             </tr>
             <?php endforeach;?>
         </tbody>
