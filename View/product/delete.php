@@ -1,6 +1,6 @@
 <?php
 
-include_once "ProductModel.php";
+include_once "Model/ProductModel.php";
 $productModel = new ProductModel();
 
 if (isset($_GET["id"])){

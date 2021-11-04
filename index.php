@@ -1,10 +1,12 @@
 <?php
 
-include_once "ProductModel.php";
+include_once "Controller/ProductController.php";
+include_once "Controller/CategoryController.php";
 
-$productModel = new ProductModel();
-$products = $productModel->getAll();
-//var_dump($products);
+$productController = new ProductController();
+$categoryController = new CategoryController();
+
+$page = (isset($_GET["page"])?$_GET["page"]:"");
 ?>
 <!doctype html>
 <html lang="en">
@@ -16,29 +18,49 @@ $products = $productModel->getAll();
     <title>Document</title>
 </head>
 <body>
-<a href="add-product.php">ADD NEW PRODUCT</a>
-    <table border="1px">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Desc</th>
-        </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($products as $product):?>
-            <tr>
-                <td><?php echo $product["id"]?></td>
-                <td><?php echo $product["name"]?></td>
-                <td><?php echo $product["price"]?></td>
-                <td><?php echo $product["description"]?></td>
-                <td><a href="product-detail.php?id=<?php echo $product["id"]?>">Detail</a></td>
-                <td><a onclick="return confirm('Are you sure??')" href="product-delete.php?id=<?php echo $product["id"]?>">Delete</a></td>
-                <td><a href="product-update.php?id=<?php echo $product["id"]?>">Edit</a></td>
-            </tr>
-            <?php endforeach;?>
-        </tbody>
-    </table>
+<div class="navbar">
+    <a href="index.php?page=product-list">Products</a>
+    <a href="index.php?page=category-list">Categories</a>
+</div>
+<?php
+    switch ($page) {
+        case "product-list":
+            $productController->index();
+            break;
+
+        case "category-list":
+            $categoryController->index();
+            break;
+
+        case "product-create":
+            if ($_SERVER["REQUEST_METHOD"]== "GET") {
+                //show form create
+                $productController->showFormCreate();
+            } else{
+                //tao san pham
+                $productController->create($_REQUEST);
+            }
+            break;
+        case "product-delete":
+            $productController->deleteProduct($_REQUEST["id"]);
+            break;
+        case "product-detail":
+            $id = $_GET["id"];
+            $productController->showDetail($id);
+            break;
+        case "product-update":
+            $id = $_GET["id"];
+            if($_SERVER["REQUEST_METHOD"]=="GET"){
+                $productController->showFormUpdate();
+            } else{
+                $productController->editProduct($id,$_REQUEST);
+            }
+
+            break;
+        default:
+            $productController->index();
+    }
+?>
+
 </body>
 </html>
